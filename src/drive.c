@@ -76,11 +76,64 @@ static bool apply_wheel_velocities(struct rover_state *rover,
  */
 enum drive_status drive_to_target(struct rover_state *rover,
                                   const struct coordinate *target) {
-  (void)rover;
-  (void)target;
+  if (rover == NULL || target == NULL) {
+    return DRIVE_INVALID_INPUT;
+  }
 
-  /* TODO: Implement the differential-drive controller. */
-  return DRIVE_INVALID_INPUT;
+  if (!isfinite(rover->position.latitude) || !isfinite(rover->position.longitude) ||
+      !isfinite(rover->position.altitude) || !isfinite(rover->heading_rad) ||
+      !isfinite(target->latitude) || !isfinite(target->longitude) ||
+      !isfinite(target->altitude)) {
+    return DRIVE_INVALID_INPUT;
+  }
+
+  for (int step = 0; step < MAX_DRIVE_STEPS; step++) {
+    float d_lat = target->latitude - rover->position.latitude;
+    float d_lon = target->longitude - rover->position.longitude;
+    float distance = sqrtf(d_lat * d_lat + d_lon * d_lon);
+
+    if (distance <= TARGET_TOLERANCE) {
+      struct wheel_velocity stop_vel = {0.0f, 0.0f};
+      apply_wheel_velocities(rover, stop_vel);
+      return DRIVE_REACHED_TARGET;
+    }
+
+    float target_heading = atan2f(d_lat, d_lon);
+    float heading_error = normalize_angle(target_heading - rover->heading_rad);
+
+    float linear_vel = distance;
+    if (linear_vel > MAX_LINEAR_VELOCITY) {
+      linear_vel = MAX_LINEAR_VELOCITY;
+    }
+
+    float angular_vel = heading_error * HEADING_GAIN;
+    if (angular_vel > MAX_ANGULAR_VELOCITY) {
+      angular_vel = MAX_ANGULAR_VELOCITY;
+    } else if (angular_vel < -MAX_ANGULAR_VELOCITY) {
+      angular_vel = -MAX_ANGULAR_VELOCITY;
+    }
+
+    float left_v = (linear_vel - (angular_vel * WHEEL_SEPARATION / 2.0f)) / WHEEL_RADIUS;
+    float right_v = (linear_vel + (angular_vel * WHEEL_SEPARATION / 2.0f)) / WHEEL_RADIUS;
+
+    float max_mag = fabsf(left_v);
+    if (fabsf(right_v) > max_mag) {
+      max_mag = fabsf(right_v);
+    }
+
+    if (max_mag > MAX_WHEEL_VELOCITY) {
+      float scale = MAX_WHEEL_VELOCITY / max_mag;
+      left_v *= scale;
+      right_v *= scale;
+    }
+
+    struct wheel_velocity vel = {left_v, right_v};
+    if (!apply_wheel_velocities(rover, vel)) {
+      return DRIVE_INVALID_COMMAND;
+    }
+  }
+
+  return DRIVE_MAX_STEPS_EXCEEDED;
 }
 
 static float normalize_angle(float angle) {
