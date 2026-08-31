@@ -23,6 +23,14 @@ Now in this specific task, I could find two problems. One is with the reader-wri
 
 In the second problem, the producer function message_queue_push was completely empty, so no data was being added to the queue. As a result, the pop function was waiting forever for data to arrive, freezing the program entirely.
 
+**Task 3:**
+
+The rover's differential drive is dealt with in this part of the code. You will be given where the rover has to move, and you have to calculate how much the rover wheels have to rotate in order to achieve that goal. It is pretty much standard mathematics that involves inverse kinematics.
+
+Now the first problem arises in the target angle it should align to; a bigger angle means the rover is thrown off course. Therefore, the target angle has to be calculated and normalized correctly.
+
+The second one is straightforward, as you have to calculate the differential drive for the wheels—just calculate how much each of the wheels has to turn so that the rover can move forward and steer towards the target.
+
 ## Thought Process
 After understanding the problem, describe how you decided to proceed towards solving the question. Also document any use of external resources or AI tools. 
 
