@@ -32,9 +32,7 @@ Now the first problem arises in the target angle it should align to; a bigger an
 The second one is straightforward, as you have to calculate the differential drive for the wheels—just calculate how much each of the wheels has to turn so that the rover can move forward and steer towards the target.
 
 ## Thought Process
-After understanding the problem, describe how you decided to proceed towards solving the question. Also document any use of external resources or AI tools. 
+My understanding on the C programming language is pretty limited , so i had to utilised ai to understand make most of the code.However i learn't or atleast tried to learn the logic behind what each code does before going about to solving it.
 
-## Implementation
-How did you decide to implement your solution.
 
 
