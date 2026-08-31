@@ -1,4 +1,4 @@
-coding Challenge solutions
+Coding Challenge solutions
 # Solution
 ## Understanding
 understanding the problem
@@ -16,16 +16,17 @@ The second problem had problems with the looping structure, and the iteration fo
 
 The third problem was with the decoder and the for loop. It also had to be fixed in accordance to COBS.
 
+Task 2
+So this is a bit hard to understand, so I'll try to make sense of it. There are threads on a CPU and it can perform a single task; with multiple CPU cores, you can perform more tasks simultaneously. Broadly, software components run on two types of threads in this setup: producer threads and consumer threads.
+
+Now in this specific task, I could find two problems. One is with the reader-writer lock. There can be multiple readers reading at the same time, but the first reader must lock the resource to prevent writers from entering and corrupting data while reading is active.
+
+In the second problem, the producer function message_queue_push was completely empty, so no data was being added to the queue. As a result, the pop function was waiting forever for data to arrive, freezing the program entirely.
+
 ## Thought Process
 After understanding the problem, describe how you decided to proceed towards solving the question. Also document any use of external resources or AI tools. 
 
 ## Implementation
 How did you decide to implement your solution.
 
-**Good luck!**
-# Google Form
-https://forms.gle/A8CaByv4ohfrCmmWA
 
-<p align="center">
-  <img src="https://github.com/teamrudra/r25-test/blob/main/datasheets/feynman-simple.jpg" width="600" height="600"/>
-</p>
