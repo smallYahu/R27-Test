@@ -46,8 +46,8 @@ void reader_enter(ReadWrite_Lock *lock){
 
     lock->reader++;
 
-    if (lock->reader != 1) {
-        // TODO: Complete reader entry logic
+    if (lock->reader == 1) {
+        sem_wait(&lock->resource);
     }
 
     pthread_mutex_unlock(&lock->reader_count);
